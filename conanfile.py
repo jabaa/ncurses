@@ -16,7 +16,7 @@ class NcursesConan(ConanFile):
         env_build = AutoToolsBuildEnvironment(self)
         args = ["--without-debug"]
         if self.options.shared:
-            args.append("--with-shared")
+            args += ["--with-shared", "--without-normal"]
         env_build.configure(configure_dir="src", args=args, build=False, host=False, target=False)
         env_build.make()
 
@@ -29,6 +29,8 @@ class NcursesConan(ConanFile):
         self.copy("*.a", dst="lib", keep_path=False)
 
     def package_info(self):
-        self.cpp_info.libs = ["libform.a", "libmenu.a", "libncurses.a", "libncurses++.a", "libpanel.a"]
+        self.cpp_info.libs = ["libncurses.a"]
         if self.options.shared:
             self.cpp_info.libs += ["libform.so", "libmenu.so", "libncurses.so", "libpanel.so"]
+        else:
+            self.cpp_info.libs += ["libform.a", "libmenu.a", "libncurses++.a", "libpanel.a"]
